@@ -8,10 +8,11 @@ import MyVerticallyCenteredModal from './components/Popup/Popup';
 
 function App() {
   const [modalShow, setModalShow] = useState(false);  //открыть/закрыть попап
-  const [check, setCheck] = useState('');             //активная радио кнопка - приоритет в попап (none, high, medium, low)
+  const [checkPriority, setCheckPriority] = useState(''); //хранит приоритет активной задачи, который отражается отмеченной радио кнопкой в попап (none, high, medium, low)
+  const [checkTags, setCheckTags] = useState('');   //хранит теги активной задачи, которые отражаются отмеченными чекбоксами в попап (none, high, medium, low)
   const [isTitleEdit, setIsTitleEdit] = useState(false); //разрешить редактировать title в popup
-  const [isDescriptionEdit, setIsDescriptionEdit] = useState(false);
-  const [action, setAction] = useState('');               //в popup выбирает массив priority или массив tags
+  const [isDescriptionEdit, setIsDescriptionEdit] = useState(false);  //разрешить редактировать description в popup
+  const [action, setAction] = useState('');           //активная(открытая) вкладка в popup (priority, tags)
   const [modalShowObj, setModalShowObj] = useState({  //объект, данные которого отражаются в попап 
     id: null,
     title: '',
@@ -23,7 +24,7 @@ function App() {
     description: ''
   });
 
-  const [tasks, setTasks] = useState([                 //список элементов todo-list
+  const [tasks, setTasks] = useState([        //список задач
     {
       id: 1,
       title: 'Сходить в кино',
@@ -31,7 +32,7 @@ function App() {
       priority: 'Medium',
       success: false,
       panding: true,
-      tags: ['home'],
+      tags: ['Home', 'Personal'],
       description: 'aaaaa'
     }
   ]);
@@ -53,8 +54,8 @@ function App() {
               : tasks.filter(el => el.panding).length === 0 && status === 'panding' ? <h2>Список ожидающих задач пуст</h2>
                 : <>
                   <ListBlock tasks={tasks} setTasks={setTasks} status={status}
-                    modalShow={modalShow} setModalShow={setModalShow} setModalShowObj={setModalShowObj}
-                    setCheck={setCheck} />
+                    setModalShow={setModalShow} setModalShowObj={setModalShowObj}
+                    setCheckPriority={setCheckPriority} setCheckTags={setCheckTags} />
 
                   <p className='App__clear'>Clear All
                     <span className='App__clear-delete'
@@ -70,8 +71,11 @@ function App() {
         tasks={tasks}
         setTasks={setTasks}
         obj={modalShowObj}
-        check={check}
-        setCheck={setCheck}
+        setObj={setModalShowObj}
+        checkPriority={checkPriority}
+        setCheckPriority={setCheckPriority}
+        checkTags={checkTags}
+        setCheckTags={setCheckTags}
         show={modalShow}
         isTitleEdit={isTitleEdit}
         setIsTitleEdit={setIsTitleEdit}

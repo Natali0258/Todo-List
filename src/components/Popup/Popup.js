@@ -6,12 +6,11 @@ import style from './Popup.module.css';
 
 const MyVerticallyCenteredModal = (props) => {
    const { titleBlock, titleBtn, titleInput, descriptionBlock, descriptionText, descriptionEdit, descriptionArea, buttonBlock, contentButton, priorityBlock, priorityLabel, priorityLabelIcon } = style;
-   const { check, setCheck, obj, tasks, setTasks, isTitleEdit, setIsTitleEdit, isDescriptionEdit, setIsDescriptionEdit, action, setAction } = props;
-   const [title, setTitle] = useState('');
-   const [description, setDescription] = useState('');
-   const [tags, setTags] = useState(['Home', 'Work', 'Personal']);
-   const [tagText, setTagText] = useState('');
-   const [checkTag, setCheckTag] = useState(false);
+   const { obj, setObj, tasks, setTasks, isTitleEdit, setIsTitleEdit, isDescriptionEdit, setIsDescriptionEdit, action, setAction, checkPriority, setCheckPriority, checkTags, setCheckTags } = props;
+   const [title, setTitle] = useState('');  //название задачи
+   const [description, setDescription] = useState('');  //описание задачи
+   const [tags, setTags] = useState(['Home', 'Work', 'Personal']); //список тегов
+   const [tagText, setTagText] = useState('');  //название тега
 
    const priority = ['High', 'Medium', 'Low', 'None']
 
@@ -19,7 +18,9 @@ const MyVerticallyCenteredModal = (props) => {
       setTasks(tasks.map(task => {
          if (id === task.id) {
             return {
-               ...task, priority: check,
+               ...task, 
+               tags: checkTags,
+               priority: checkPriority,
                title: title.length ? title : task.title,
                description: description.length ? description : task.description
             } //при сохранении не редактированного title сохраняем текущий item.title
@@ -44,6 +45,14 @@ const MyVerticallyCenteredModal = (props) => {
 
    const deleteTag = (name) => {
       setTags(tags.filter(el => el !== name))
+   }
+
+   const checkTagsHandly=(tag)=>{
+      if(checkTags.includes(tag)){
+         setCheckTags(checkTags.filter(el=>el!==tag))
+      }else{
+         setCheckTags([...checkTags,tag])
+      }
    }
 
    return (
@@ -101,8 +110,8 @@ const MyVerticallyCenteredModal = (props) => {
                   action === 'priority' ? priority.map((item, idx) => (
                      <div key={idx} className="mb-3">
                         <Form.Check type='radio' id={`check-api-${item}`} className={priorityBlock}>
-                           <Form.Check.Input style={{ borderColor: 'blue' }} name='priority' type='radio' checked={item === check} isValid
-                              onChange={() => setCheck(item)} />
+                           <Form.Check.Input style={{ borderColor: 'blue' }} name='priority' type='radio' checked={item === checkPriority} isValid
+                              onChange={() => setCheckPriority(item)} />
                            <Form.Check.Label className={priorityLabel} style={{ color: 'blue' }}>
                               <span className={priorityLabelIcon} style={{
                                  color: item === 'High' ? 'red'
@@ -129,9 +138,8 @@ const MyVerticallyCenteredModal = (props) => {
                                     <span style={{ marginLeft: '20px', fontSize: '18px' }}>{tag}</span>
                                  </div>
                                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <input type="checkbox" name style={{ width: '18px', height: '18px' }}
-                                    //checked={checkTag} onChange={(e) => setCheckTag(!checkTag)}
-                                    />
+                                    <input defaultChecked={checkTags.includes(tag)} type="checkbox" name style={{ width: '18px', height: '18px' }}
+                                       onChange={() => checkTagsHandly(tag)} />
                                     <span style={{ marginLeft: '10px', fontWeight: 'bold', cursor: 'pointer' }}
                                        onClick={() => deleteTag(tag)}>X</span>
                                  </div>
