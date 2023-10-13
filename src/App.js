@@ -3,7 +3,7 @@ import StatusBlock from './components/StatusBlock/StatusBlock';
 import FormBlock from './components/FormBlock/FormBlock';
 import ListBlock from './components/ListBlock/ListBlock';
 import { MdDelete } from 'react-icons/md';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MyVerticallyCenteredModal from './components/Popup/Popup';
 
 function App() {
@@ -38,6 +38,15 @@ function App() {
   ]);
 
   const [status, setStatus] = useState('total');        //статус элемента списка todo-list (total, success, panding)
+
+  useEffect(() => {
+    setTasks(JSON.parse(localStorage.getItem('tasks')));
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks])
+
 
   return (
     <div className='App'>
